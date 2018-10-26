@@ -43,7 +43,7 @@ public class BaseDataSourceConfig {
 
 
     /**
-     * 注入 datasource
+     * 注入 datasource 数据源
      * @return
      */
     @Bean(name = "baseDataSource")
