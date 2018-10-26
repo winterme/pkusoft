@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.zhangzq.mapper.UserinfoMapper">
+  <resultMap id="BaseResultMap" type="com.zzq.zhangzq.po.Userinfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="userimg" jdbcType="VARCHAR" property="userimg" />
+  </resultMap>
+</mapper>
