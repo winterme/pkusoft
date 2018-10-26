@@ -6,7 +6,9 @@ import com.zzq.licm.service.MsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,6 +27,12 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public Msg selectMsgById(String id) {
-        return msgMapper.selectByPrimaryKey(id);
+        Example example = new Example(Msg.class);
+        example.createCriteria().andEqualTo("id",id);
+        List<Msg> list = msgMapper.selectByExample(example);
+        if( list.size()>0 ){
+            return list.get(0);
+        }
+        return null;
     }
 }

@@ -9,15 +9,18 @@ spring:
     base:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/zhangzq?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://127.0.0.1:3306/zhangzq?useUnicode=true&characterEncoding=utf-8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Hongkong&zeroDateTimeBehavior=convertToNull
       username: root
       password: root
     licm:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/licm?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://127.0.0.1:3306/licm?useUnicode=true&characterEncoding=utf-8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Hongkong&zeroDateTimeBehavior=convertToNull
       username: root
       password: root
+  jackson:
+    date-format: yyyyMMddHHmmss
+    time-zone: GMT+8
 
 web.webupload: /webupload
 
@@ -28,3 +31,5 @@ logging:
       mybatis: info
     com:
       zzq: debug
+  file: pkusoft.log
+
