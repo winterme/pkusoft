@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MsgController {
@@ -43,6 +46,18 @@ public class MsgController {
         try {
             Msg msg = msgService.selectMsgById(id);
             return new JsonResult(true,msg);
+        } catch (Exception e) {
+            logger.error("查询失败！");
+            return new JsonResult(false,"");
+        }
+    }
+
+    @RequestMapping("/licm/getMsgByPage/{start}/{size}")
+    @ResponseBody
+    public JsonResult getMsgById(@PathVariable("start")int start,@PathVariable("size")int size){
+        try {
+            Map<String , Object> result = msgService.selectListMsgByPage(start,size);
+            return new JsonResult(true, result);
         } catch (Exception e) {
             logger.error("查询失败！");
             return new JsonResult(false,"");
