@@ -44,10 +44,13 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public Map<String ,Object> selectListMsgByPage(int page, int size) {
+        // set 第几页，一页获取多少条
         Page<Object> objects = PageHelper.startPage(page, size);
+        // example 查询
         Example example = new Example(Msg.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId","zhangzq");
+        // 获取数据
         List<Msg> list = msgMapper.selectByExample(example);
         PageInfo<Msg> pageInfo = new PageInfo<>(list);
 

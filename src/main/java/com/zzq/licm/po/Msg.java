@@ -12,6 +12,16 @@ public class Msg {
 
     private Date replyTime;
 
+    @Override
+    public String toString() {
+        return "Msg{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", msg='" + msg + '\'' +
+                ", replyTime=" + replyTime +
+                '}';
+    }
+
     /**
      * @return id
      */

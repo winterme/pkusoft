@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.usercenter.mapper.SysUserMapper">
+  <resultMap id="BaseResultMap" type="com.zzq.usercenter.po.SysUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="password_salt" jdbcType="VARCHAR" property="passwordSalt" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_uid" jdbcType="VARCHAR" property="createUid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    uid, username, password, password_salt, status, create_user, create_uid, create_time
+  </sql>
+</mapper>
