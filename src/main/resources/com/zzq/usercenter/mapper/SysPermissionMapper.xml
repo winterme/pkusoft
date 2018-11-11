@@ -19,4 +19,19 @@
     -->
     pid, permission_name, permission, url, create_user, create_uid, create_time
   </sql>
+  
+  <select id="getSysPermissionByUid" resultMap="BaseResultMap">
+    select * from sys_permission p1
+    where 1=1
+    and p1.pid in (
+        select p.pid from sys_role_permission p
+        where 1=1
+        and p.rid = (
+            select r.rid from sys_user_role r
+            where 1=1
+            and r.uid = #{ uid , jdbcType=VARCHAR }
+        )
+    )
+  </select>
+  
 </mapper>

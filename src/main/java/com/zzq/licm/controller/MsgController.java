@@ -3,6 +3,7 @@ package com.zzq.licm.controller;
 import com.zzq.licm.po.Msg;
 import com.zzq.licm.service.MsgService;
 import com.zzq.util.JsonResult;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ public class MsgController {
 
     private static final Logger logger = LoggerFactory.getLogger(MsgController.class);
 
+    @RequestMapping("/denied")
+    @ResponseBody
+    public String denied(){
+        return "权限不足！";
+    }
+
     @RequestMapping("/licm/addMsg")
     @ResponseBody
     public JsonResult addMsg(Msg msgEntry ){
@@ -40,6 +47,7 @@ public class MsgController {
         }
     }
 
+    @RequiresPermissions(value = {"msg:find"})
     @RequestMapping("/licm/getMsgById/{id}")
     @ResponseBody
     public JsonResult getMsgById(@PathVariable("id")String id){
@@ -52,6 +60,7 @@ public class MsgController {
         }
     }
 
+    @RequiresPermissions(value = {"msg:list"})
     @RequestMapping("/licm/getMsgByPage/{start}/{size}")
     @ResponseBody
     public JsonResult getMsgById(@PathVariable("start")int start,@PathVariable("size")int size){

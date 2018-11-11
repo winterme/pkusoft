@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "sys_user")
 public class SysUser {
@@ -17,6 +18,12 @@ public class SysUser {
     @Column(name = "password_salt")
     private String passwordSalt;
 
+    // 所有的角色
+    private List<String> roles;
+
+    // 所有的权限
+    private List<String> permission;
+
     private String status;
 
     @Column(name = "create_user")
@@ -27,6 +34,22 @@ public class SysUser {
 
     @Column(name = "create_time")
     private Date createTime;
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public List<String> getPermission() {
+        return permission;
+    }
+
+    public void setPermission(List<String> permission) {
+        this.permission = permission;
+    }
 
     /**
      * @return uid

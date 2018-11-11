@@ -18,4 +18,15 @@
     -->
     rid, pid, role_name, create_user, create_uid, create_time
   </sql>
+  
+  <select id="getRoleNameByUserId" resultMap="BaseResultMap">
+    select * from sys_role_permission p
+    where 1=1
+    and p.rid = (
+        select r.rid from sys_user_role r
+        where 1=1
+        and r.uid = #{ uid , jdbcType=VARCHAR }
+    )
+  </select>
+  
 </mapper>
