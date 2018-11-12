@@ -47,9 +47,9 @@ public class MsgController {
         }
     }
 
-    @RequiresPermissions(value = {"msg:find"})
     @RequestMapping("/licm/getMsgById/{id}")
     @ResponseBody
+    @RequiresPermissions(value = {"msg:find"})
     public JsonResult getMsgById(@PathVariable("id")String id){
         try {
             Msg msg = msgService.selectMsgById(id);
@@ -60,9 +60,9 @@ public class MsgController {
         }
     }
 
-    @RequiresPermissions(value = {"msg:list"})
     @RequestMapping("/licm/getMsgByPage/{start}/{size}")
     @ResponseBody
+    @RequiresPermissions(value = {"msg:list"})
     public JsonResult getMsgById(@PathVariable("start")int start,@PathVariable("size")int size){
         try {
             Map<String , Object> result = msgService.selectListMsgByPage(start,size);

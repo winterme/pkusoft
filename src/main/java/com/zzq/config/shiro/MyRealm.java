@@ -12,6 +12,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Set;
+
 /**
  * 自定义 realm
  */
@@ -24,9 +26,37 @@ public class MyRealm extends AuthorizingRealm {
     public String getName() {
         return "myRealm";
     }
-    // 认证
+
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        // 从session中获取 user 对象
+        Session session = SecurityUtils.getSubject().getSession();
+        SysUser user = (SysUser)session.getAttribute("USER_SESSION");
+        System.out.println( "执行了================>" );
+        // 权限信息对象
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        info.addRoles( user.getRoles() );
+        info.addStringPermissions( user.getPermission() );
+
+        Set<String> roles = info.getRoles();
+        for (String str  : roles) {
+            System.out.println( "角色："+ str );
+        }
+        Set<String> permissions = info.getStringPermissions();
+        for (String str  : permissions) {
+            System.out.println( "权限："+ str );
+        }
+
+
+        return info;
+    }
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        //加这一步的目的是在Post请求的时候会先进认证，然后在到请求
+        if (authenticationToken.getPrincipal() == null) {
+            return null;
+        }
         String username = (String)authenticationToken.getPrincipal();
         // 获取用户名。通过 username 找到该用户
         SysUser user = sysUserService.getUserByUserNameWithPermission(username);
@@ -43,20 +73,4 @@ public class MyRealm extends AuthorizingRealm {
         session.setAttribute("USER_SESSION", user);
         return info;
     }
-
-    // 授权
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        // 从session中获取 user 对象
-        Session session = SecurityUtils.getSubject().getSession();
-        SysUser user = (SysUser)session.getAttribute("USER_SESSION");
-
-        // 权限信息对象
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.addRoles( user.getRoles() );
-        info.addStringPermissions( user.getPermission() );
-
-        return info;
-    }
-
 }

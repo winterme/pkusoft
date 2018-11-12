@@ -19,6 +19,21 @@ import java.util.Map;
 @Configuration
 public class DruidConfiguration {
 
+    /*
+     * 注册过滤器
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean setDruidFilter(){
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.addUrlPatterns("/*");
+        filterRegistrationBean.setFilter( new WebStatFilter());
+        Map<String, String> initParameters = new HashMap<>();
+        initParameters.put("exclusions", "*.js,*.html,*.gif,*.jpg,*.png,*.css,*.ico,*.jsp,/druid/*,/download/*");
+        filterRegistrationBean.setInitParameters( initParameters );
+        return filterRegistrationBean;
+    }
+
     /**
      * 注册一个StatViewServlet
      * @return
@@ -39,19 +54,4 @@ public class DruidConfiguration {
         servletRegistrationBean.setInitParameters(initParameters);
         return servletRegistrationBean;
     }
-    /*
-     * 注册过滤器
-     * @return
-     */
-    /*@Bean
-    public FilterRegistrationBean setDruidFilter(){
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.addUrlPatterns("/*");
-        filterRegistrationBean.setFilter( new StatViewFilter());
-        Map<String, String> initParameters = new HashMap<>();
-        initParameters.put("exclusions", "*.js,*.html,*.gif,*.jpg,*.png,*.css,*.ico,*.jsp,/druid/*,/download/*");
-        filterRegistrationBean.setInitParameters( initParameters );
-        return filterRegistrationBean;
-    }*/
-
 }

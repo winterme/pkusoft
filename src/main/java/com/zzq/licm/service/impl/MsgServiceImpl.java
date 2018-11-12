@@ -28,6 +28,7 @@ public class MsgServiceImpl implements MsgService {
     public int insertSelective(Msg msg) {
         String id = UUID.randomUUID().toString();
         msg.setId(id);
+
         return msgMapper.insertSelective(msg);
     }
 
