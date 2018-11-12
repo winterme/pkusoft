@@ -2,16 +2,21 @@ package com.zzq.config.shiro;
 
 import com.zzq.usercenter.po.SysUser;
 import com.zzq.usercenter.service.SysUserService;
+import com.zzq.util.MD5Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.SessionsSecurityManager;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -21,6 +26,9 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private SessionDAO sessionDAO;
 
     @Override
     public String getName() {
@@ -58,17 +66,36 @@ public class MyRealm extends AuthorizingRealm {
             return null;
         }
         String username = (String)authenticationToken.getPrincipal();
+        String password = new String((char[])authenticationToken.getCredentials());
+        System.out.println( "username="+username+",password="+password );
+
         // 获取用户名。通过 username 找到该用户
         SysUser user = sysUserService.getUserByUserNameWithPermission(username);
         if( !"1".equals(user.getStatus()) ){
             throw new LockedAccountException();
         }
+
+        if( username.equals( user.getUsername() ) && password.equals( user.getPassword() ) ){
+            // 获取所有session
+            Collection<Session> sessions = sessionDAO.getActiveSessions();
+            for (Session session: sessions) {
+                SysUser sysUser = (SysUser)session.getAttribute("USER_SESSION");
+                // 如果session里面有当前登陆的，则证明是重复登陆的，则将其剔除
+                if( sysUser!=null ){
+                    if( username.equals( sysUser.getUsername() ) ){
+                        session.setTimeout(0);
+                    }
+                }
+            }
+        }
+
         // 从数据库查询出来的用户名密码，进行验证
         // 用户名，密码，密码盐值，realm 名称
         // 登陆的时候直接调用 subject.login() 即可自动调用该方法
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(
-                authenticationToken.getPrincipal() , user.getPassword() , ByteSource.Util.bytes( user.getPasswordSalt()) , getName()
+                authenticationToken.getPrincipal() , user.getPassword() , getName()
         );
+
         Session session = SecurityUtils.getSubject().getSession();
         session.setAttribute("USER_SESSION", user);
         return info;

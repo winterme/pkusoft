@@ -3,9 +3,11 @@ package com.zzq.usercenter.controller;
 import com.zzq.usercenter.po.SysUser;
 import com.zzq.usercenter.service.SysUserService;
 import com.zzq.util.JsonResult;
+import com.zzq.util.MD5Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +17,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class SysUserController {
 
-    private static  final Logger logger = LoggerFactory.getLogger(SysUserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysUserController.class);
 
     @Autowired
     private SysUserService sysUserService;
 
     @RequestMapping("/getSysUser")
     @ResponseBody
-    public JsonResult getSysUser(SysUser sysUser){
+    public JsonResult getSysUser(SysUser sysUser) {
         SysUser user = sysUserService.getUserByUserName(sysUser.getUsername());
 
-        return new JsonResult( true , null , user );
+        return new JsonResult(true, null, user);
     }
 
     @RequestMapping("/login")
@@ -42,9 +45,10 @@ public class SysUserController {
         // 用户输入的账号和密码,,存到UsernamePasswordToken对象中..然后由shiro内部认证对比,
         // 认证执行者交由 com.battcn.config.AuthRealm 中 doGetAuthenticationInfo 处理
         // 当以上认证成功后会向下执行,认证失败会抛出异常
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Util.MD5(password));
         try {
             sub.login(token);
+            System.out.println( token.toString() );
         } catch (UnknownAccountException e) {
             logger.error("对用户[{}]进行登录验证,验证未通过,用户不存在", username);
             token.clear();
@@ -65,7 +69,7 @@ public class SysUserController {
 
         // 从session中获取 user 对象
         Session session = SecurityUtils.getSubject().getSession();
-        SysUser user = (SysUser)session.getAttribute("USER_SESSION");
+        SysUser user = (SysUser) session.getAttribute("USER_SESSION");
 
         return user;
     }

@@ -1,5 +1,9 @@
 package com.zzq.config.shiro;
 
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -13,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.shiro.mgt.SecurityManager;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,11 +30,11 @@ public class ShiroConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 
+    // 下面两个方法对 注解权限起作用有很大的关系，请把这两个方法，放在配置的最上面
     @Bean(name = "lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
-
     @Bean
     public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator autoProxyCreator = new DefaultAdvisorAutoProxyCreator();
@@ -45,10 +50,27 @@ public class ShiroConfig {
         return myRealm;
     }
 
+    @Bean(name="sessionDAO")
+    public MemorySessionDAO getMemorySessionDAO(){
+        MemorySessionDAO sessionDAO = new MemorySessionDAO();
+        return sessionDAO;
+    }
+
+    //配置shiro session 的一个管理器
+    @Bean(name = "sessionManager")
+    public DefaultWebSessionManager getDefaultWebSessionManager(){
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        // 设置session过期时间
+        sessionManager.setGlobalSessionTimeout(60*60*1000);
+        sessionManager.setSessionDAO(getMemorySessionDAO());
+        return sessionManager;
+    }
+
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(MyRealm authRealm) {
+    public DefaultWebSecurityManager getDefaultWebSecurityManager() {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
-        defaultWebSecurityManager.setRealm(authRealm);
+        defaultWebSecurityManager.setRealm( myRealm() );
+        defaultWebSecurityManager.setSessionManager( getDefaultWebSessionManager() );
         return defaultWebSecurityManager;
     }
 
