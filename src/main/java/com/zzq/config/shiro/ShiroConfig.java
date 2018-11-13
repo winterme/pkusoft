@@ -45,7 +45,6 @@ public class ShiroConfig {
     //将自己的验证方式加入容器
     @Bean
     public MyRealm myRealm() {
-        System.out.println( "注入 realm" );
         MyRealm myRealm = new MyRealm();
         return myRealm;
     }

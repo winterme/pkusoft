@@ -48,7 +48,6 @@ public class SysUserController {
         UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Util.MD5(password));
         try {
             sub.login(token);
-            System.out.println( token.toString() );
         } catch (UnknownAccountException e) {
             logger.error("对用户[{}]进行登录验证,验证未通过,用户不存在", username);
             token.clear();

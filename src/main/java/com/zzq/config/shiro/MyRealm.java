@@ -87,6 +87,10 @@ public class MyRealm extends AuthorizingRealm {
                     }
                 }
             }
+            // 验证通过了 setSession
+            Session session = SecurityUtils.getSubject().getSession();
+            session.setAttribute("USER_SESSION", user);
+
         }
 
         // 从数据库查询出来的用户名密码，进行验证
@@ -96,8 +100,7 @@ public class MyRealm extends AuthorizingRealm {
                 authenticationToken.getPrincipal() , user.getPassword() , getName()
         );
 
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("USER_SESSION", user);
+
         return info;
     }
 }
