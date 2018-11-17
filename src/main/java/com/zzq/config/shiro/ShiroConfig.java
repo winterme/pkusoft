@@ -92,7 +92,11 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 
         // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/backstage/index.html", "anon");
+        filterChainDefinitionMap.put("/common/**", "anon");
+        filterChainDefinitionMap.put("/backstage/css/**", "anon");
+        filterChainDefinitionMap.put("/backstage/js/**", "anon");
+        filterChainDefinitionMap.put("/backstage/images/**", "anon");
         filterChainDefinitionMap.put("/login", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
@@ -100,9 +104,9 @@ public class ShiroConfig {
         //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-        shiroFilterFactoryBean.setLoginUrl("/login.html");
+        shiroFilterFactoryBean.setLoginUrl("/backstage/login.html");
         // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setSuccessUrl("/index.html");
+        shiroFilterFactoryBean.setSuccessUrl("/backstage/index.html");
 
         //未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/403.html");

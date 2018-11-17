@@ -39,7 +39,7 @@ public class SysUserController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public Object login(String username, String password, RedirectAttributes model) {
+    public JsonResult login(String username, String password, RedirectAttributes model) {
         // 想要得到 SecurityUtils.getSubject() 的对象．．访问地址必须跟 shiro 的拦截地址内．不然后会报空指针
         Subject sub = SecurityUtils.getSubject();
         // 用户输入的账号和密码,,存到UsernamePasswordToken对象中..然后由shiro内部认证对比,
@@ -51,26 +51,26 @@ public class SysUserController {
         } catch (UnknownAccountException e) {
             logger.error("对用户[{}]进行登录验证,验证未通过,用户不存在", username);
             token.clear();
-            return "UnknownAccountException";
+            return new JsonResult(false , "UnknownAccountException");
         } catch (LockedAccountException lae) {
             logger.error("对用户[{}]进行登录验证,验证未通过,账户已锁定", username);
             token.clear();
-            return "LockedAccountException";
+            return new JsonResult(false, "LockedAccountException");
         } catch (ExcessiveAttemptsException e) {
             logger.error("对用户[{}]进行登录验证,验证未通过,错误次数过多", username);
             token.clear();
-            return "ExcessiveAttemptsException";
+            return new JsonResult(false,"ExcessiveAttemptsException");
         } catch (AuthenticationException e) {
             logger.error("对用户[{}]进行登录验证,验证未通过,堆栈轨迹如下", username, e);
             token.clear();
-            return "AuthenticationException";
+            return new JsonResult(false,"AuthenticationException");
         }
 
         // 从session中获取 user 对象
         Session session = SecurityUtils.getSubject().getSession();
         SysUser user = (SysUser) session.getAttribute("USER_SESSION");
 
-        return user;
+        return new JsonResult(true,"ok",user);
     }
 
 }
