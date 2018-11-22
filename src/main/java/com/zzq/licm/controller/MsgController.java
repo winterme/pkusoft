@@ -2,6 +2,8 @@ package com.zzq.licm.controller;
 
 import com.zzq.licm.po.Msg;
 import com.zzq.licm.service.MsgService;
+import com.zzq.util.Element;
+import com.zzq.util.GetTree;
 import com.zzq.util.JsonResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
@@ -9,6 +11,7 @@ import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +30,14 @@ public class MsgController {
     private SessionDAO sessionDAO;
 
     private static final Logger logger = LoggerFactory.getLogger(MsgController.class);
+
+    @RequestMapping("/getTree")
+    @ResponseBody
+    public JsonResult getTree(){
+        GetTree getTree = new GetTree();
+        List<Element> tree = getTree.getTree();
+        return new JsonResult(true , tree);
+    }
 
     @RequestMapping("/show")
     @ResponseBody

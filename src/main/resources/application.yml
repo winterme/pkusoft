@@ -35,6 +35,7 @@ logging:
   level:
     org:
       mybatis: info
-    com:
-      zzq: debug
+    #com:
+      zzq: error
+
   file: pkusoft.log
